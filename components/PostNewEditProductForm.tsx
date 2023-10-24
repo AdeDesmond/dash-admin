@@ -14,6 +14,7 @@ function PostNewEditProductForm() {
   const [description, setDescription] = React.useState("");
   const [images, setImages] = React.useState<string[]>([]);
   const [isUploading, setIsUploading] = React.useState(false);
+  const [selectedCategory, setSelectedCategory] = React.useState<string>("");
   const [categories, setCategories] = React.useState<
     { _id: string; category: string }[]
   >([]);
@@ -42,10 +43,40 @@ function PostNewEditProductForm() {
       setCategories(res.data?.categoryData);
     });
   }, []);
+
+  const handleSubmitNewEditProduct = (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    const productData = {
+      title,
+      price,
+      quantity,
+      description,
+      images,
+      selectedCategory,
+    };
+    axios
+      .post("/api/products", productData)
+      .then((res) => {
+        toast.success(res.data.message);
+        setTitle("");
+        setPrice("");
+        setQuantity("");
+        setDescription("");
+        setImages([]);
+        setSelectedCategory("");
+      })
+      .catch((err: any) => {
+        toast.error(err.message);
+      });
+  };
   return (
     <div>
       {error && toast.error(error)}
-      <form action="" className="flex flex-col gap-y-1 w-3/4 mx-auto">
+      <form
+        action=""
+        className="flex flex-col gap-y-1 w-3/4 mx-auto"
+        onSubmit={handleSubmitNewEditProduct}
+      >
         <label
           htmlFor="title"
           className="after:content-['*'] after:ml-0.5 after:text-red-500"
@@ -78,6 +109,8 @@ function PostNewEditProductForm() {
         />
         <label htmlFor="categories">Categories</label>
         <select
+          value={selectedCategory}
+          onChange={(e) => setSelectedCategory(e.target.value)}
           name="categories"
           id="categories"
           className="h-10 shadow-md rounded-lg w-48 mt-2 mb-2 block py-2.5 px-0 text-sm text-gray-500 bg-transparent border-0 border-b-2 border-gray-200 appearance-none dark:text-gray-400 dark:border-gray-700 focus:outline-none focus:ring-0 focus:border-gray-200 peer"

@@ -1,12 +1,27 @@
+"use client";
+
 import DisplayProductsTable from "@/components/DisplayProductsTable";
 import { Button } from "@/components/ui/button";
+import axios from "axios";
 import { Plus } from "lucide-react";
 import Link from "next/link";
-import React from "react";
+import React, { useEffect } from "react";
 
 function ProductsPage() {
+  const [products, setProducts] = React.useState();
+
+  useEffect(() => {
+    const fetchProducts = async () => {
+      const res = await fetch("http://localhost:3000/api/products", {
+        method: "GET",
+      });
+      const data = await res.json();
+      setProducts(data.productData);
+    };
+    fetchProducts();
+  }, []);
   return (
-    <section className="w-full">
+    <section className="w-full overflow-y-auto">
       <div className="flex justify-between">
         <h1 className="text-2xl font-bold bg-slate-200 w-[12.5rem] ml-4 p-2 shadow-md">
           Products Page
@@ -23,7 +38,7 @@ function ProductsPage() {
           </Link>
         </Button>
       </div>
-      <DisplayProductsTable />
+      {products && <DisplayProductsTable products={products} />}
     </section>
   );
 }
