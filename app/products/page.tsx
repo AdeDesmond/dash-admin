@@ -1,3 +1,4 @@
+import DisplayProductsTable from "@/components/DisplayProductsTable";
 import { Button } from "@/components/ui/button";
 import { Plus } from "lucide-react";
 import Link from "next/link";
@@ -13,7 +14,7 @@ function ProductsPage() {
         <Button
           variant={"secondary"}
           size={"lg"}
-          className="shadow-md mr-4"
+          className=" mr-4 bg-blue-500 hover:bg-blue-600 text-white"
           asChild
         >
           <Link href="/products/new" className="flex gap-x-1">
@@ -22,6 +23,7 @@ function ProductsPage() {
           </Link>
         </Button>
       </div>
+      <DisplayProductsTable />
     </section>
   );
 }
